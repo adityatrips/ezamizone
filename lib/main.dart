@@ -3,13 +3,16 @@ import 'package:ezamizone/pages/attendance.dart';
 import 'package:ezamizone/pages/courses.dart';
 import 'package:ezamizone/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   GetStorage.init();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   runApp(const MainApp());
 }
 
@@ -32,6 +35,17 @@ class _MainAppState extends State<MainApp> {
   }
 
   @override
+  void initState() {
+    Future.delayed(
+      const Duration(
+        seconds: 2,
+      ),
+      () => FlutterNativeSplash.remove(),
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     fetchUserData();
     return MultiProvider(
@@ -39,7 +53,7 @@ class _MainAppState extends State<MainApp> {
         ChangeNotifierProvider(create: (context) => ApiProvider()),
       ],
       child: GetMaterialApp(
-        initialRoute: "/courses",
+        initialRoute: "/",
         routes: {
           "/": (context) => _getScaffold(const AttendancePage()),
           "/courses": (context) => _getScaffold(const CoursesPage()),
