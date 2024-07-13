@@ -3,19 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-final Dio dio = Dio(
-  BaseOptions(
-    baseUrl: "http://amizone.fly.dev/api/v1",
-    headers: {
-      "Authorization": "Basic ${base64Encode(
-        utf8.encode('11330339:pratham@0510'),
-      )}",
-    },
-    validateStatus: (status) {
-      return status! < 500;
-    },
-  ),
-);
+Dio? dio;
 
 class ApiProvider extends ChangeNotifier {
   Map<String, dynamic> attendance = {};
@@ -25,6 +13,7 @@ class ApiProvider extends ChangeNotifier {
   Map<String, dynamic> examSchedule = {};
   Map<String, dynamic> semesters = {};
   Map<String, dynamic> profile = {};
+  String username = "";
   bool isCredentialsValid = false;
   dynamic dropdownValue;
 
@@ -39,23 +28,47 @@ class ApiProvider extends ChangeNotifier {
     return const Color.fromRGBO(102, 187, 106, 1);
   }
 
-  Future<void> getIsCredsValid() async {
+  Future<bool> getIsCredsValid(
+    String formUsername,
+    String formPassword,
+  ) async {
     try {
-      final response = await dio.get("/user_profile");
+      dio = Dio(
+        BaseOptions(
+          baseUrl: "http://amizone.fly.dev/api/v1",
+          headers: {
+            "Authorization": "Basic ${base64Encode(
+              // utf8.encode('11330339:pratham@0510'),
+              utf8.encode('$formUsername:$formPassword'),
+            )}",
+          },
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+
+      final response = await dio!.get("/user_profile");
 
       if (response.statusCode == 200) {
+        profile = jsonDecode(jsonEncode(response.data));
         isCredentialsValid = true;
+        username = response.data["name"].toString().split(' ')[0];
       }
     } catch (e) {
       isCredentialsValid = false;
+      profile = {};
+      username = "EzAmizone";
     } finally {
       notifyListeners();
     }
+
+    return isCredentialsValid;
   }
 
   Future<void> getAttendance() async {
     try {
-      final response = await dio.get("/attendance");
+      final response = await dio!.get("/attendance");
       if (response.statusCode == 200) {
         attendance = jsonDecode(jsonEncode(response.data));
       }
@@ -72,7 +85,7 @@ class ApiProvider extends ChangeNotifier {
     String day,
   ) async {
     try {
-      final response = await dio.get("/class_schedule/$year/$month/$day");
+      final response = await dio!.get("/class_schedule/$year/$month/$day");
       if (response.statusCode == 200) {
         timetable = jsonDecode(jsonEncode(response.data));
       }
@@ -85,7 +98,7 @@ class ApiProvider extends ChangeNotifier {
 
   Future<void> getAllCourses({String? ref}) async {
     try {
-      final response = await dio.get(
+      final response = await dio!.get(
         ref == null ? "/courses" : "/courses/$ref",
       );
 
@@ -101,7 +114,7 @@ class ApiProvider extends ChangeNotifier {
 
   Future<void> getExamResults({String? ref}) async {
     try {
-      final response = await dio.get(
+      final response = await dio!.get(
         ref == null ? "/exam_result" : "/exam_result/$ref",
       );
 
@@ -117,7 +130,7 @@ class ApiProvider extends ChangeNotifier {
 
   Future<void> getExamSchedule() async {
     try {
-      final response = await dio.get("/exam_schedule");
+      final response = await dio!.get("/exam_schedule");
 
       if (response.statusCode == 200) {
         examSchedule = jsonDecode(jsonEncode(response.data));
@@ -131,7 +144,7 @@ class ApiProvider extends ChangeNotifier {
 
   Future<void> getSemesters() async {
     try {
-      final response = await dio.get("/semesters");
+      final response = await dio!.get("/semesters");
 
       if (response.statusCode == 200) {
         semesters = jsonDecode(jsonEncode(response.data));
@@ -139,20 +152,6 @@ class ApiProvider extends ChangeNotifier {
       }
     } catch (e) {
       semesters = {};
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> getProfile() async {
-    try {
-      final response = await dio.get("/user_profile");
-
-      if (response.statusCode == 200) {
-        profile = jsonDecode(jsonEncode(response.data));
-      }
-    } catch (e) {
-      profile = {};
     } finally {
       notifyListeners();
     }

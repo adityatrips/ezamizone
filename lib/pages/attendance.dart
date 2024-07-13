@@ -2,6 +2,7 @@ import 'package:ezamizone/providers/auth.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AttendancePage extends StatefulWidget {
@@ -72,7 +73,7 @@ class _AttendancePageState extends State<AttendancePage> {
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: const [0.5, 1],
+          stops: const [0.3, 1],
         ),
       ),
       padding: const EdgeInsets.all(16.0),
@@ -81,11 +82,14 @@ class _AttendancePageState extends State<AttendancePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             maxRadius: 50,
             child: Text(
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
               textAlign: TextAlign.center,
-              "${api.attendance["records"][index]["attendance"]["held"]}/${api.attendance["records"][index]["attendance"]["held"]}\n%",
+              "${api.attendance["records"][index]["attendance"]["attended"]}/${api.attendance["records"][index]["attendance"]["held"]}\n${api.attendance["records"][index]["attendance"]["attended"] / api.attendance["records"][index]["attendance"]["held"] * 100}%",
             ),
           ),
         ],
@@ -111,7 +115,7 @@ class _AttendancePageState extends State<AttendancePage> {
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: const [0.3, 1],
+            stops: const [0.2, 1],
           ),
         ),
         padding: const EdgeInsets.all(16.0),
@@ -122,25 +126,31 @@ class _AttendancePageState extends State<AttendancePage> {
             Text(
               api.attendance["records"][index]['course']['code'],
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
-                color: Colors.white,
+                color: Get.isDarkMode
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.w900,
               ),
             ),
             Text(
               api.attendance["records"][index]['course']['name'],
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Get.isDarkMode
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               "Tap to view attendance.",
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white,
+                color: Get.isDarkMode
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
@@ -150,28 +160,4 @@ class _AttendancePageState extends State<AttendancePage> {
       ),
     );
   }
-
-  // Widget _attendanceInformation(
-  //   BuildContext context,
-  //   Map<String, dynamic>? attendance,
-  //   bool isLast,
-  // ) {
-  //   String getPercentage() {
-  //     int total = attendance!["attendance"]["held"];
-  //     int attended = attendance["attendance"]["attended"];
-  //     return ((attended / total) * 100).toStringAsFixed(2);
-  //   }
-
-  //   Color getBgColor() {
-  //     double percent = double.parse(getPercentage().split(" ")[0]);
-
-  //     if (percent < 75) {
-  //       return const Color.fromRGBO(239, 83, 80, 1);
-  //     } else if (percent >= 75 && percent < 85) {
-  //       return const Color.fromRGBO(255, 167, 38, 1);
-  //     }
-  //     return const Color.fromRGBO(102, 187, 106, 1);
-  //   }
-
-  //   return }
 }

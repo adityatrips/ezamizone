@@ -1,5 +1,6 @@
 import 'package:ezamizone/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -183,8 +184,11 @@ class _CoursesPageState extends State<CoursesPage> {
                               child: InkResponse(
                                 child: Icon(
                                   Icons.file_download_rounded,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                  color: Get.isDarkMode
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary
+                                      : Theme.of(context).colorScheme.onPrimary,
                                 ),
                               ),
                             )
