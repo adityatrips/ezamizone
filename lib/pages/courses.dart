@@ -1,3 +1,5 @@
+import 'package:ezamizone/banner_ad_widget.dart';
+import 'package:ezamizone/globals.dart';
 import 'package:ezamizone/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,25 +40,43 @@ class _CoursesPageState extends State<CoursesPage> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : ListView.separated(
-                itemCount: api.allCourses["courses"].length,
-                separatorBuilder: (context, index) => const SizedBox(height: 8),
-                itemBuilder: (context, index) {
-                  if (index == api.allCourses["courses"].length - 1) {
-                    return getCourseCard(
-                      index,
-                      isLast: true,
-                    );
-                  } else if (index == 0) {
-                    return getCourseCard(
-                      index,
-                      isFirst: true,
-                    );
-                  }
-                  return getCourseCard(
-                    index,
-                  );
-                },
+            : Stack(
+                children: [
+                  ListView(
+                    children: [
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: api.allCourses["courses"].length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          if (index == api.allCourses["courses"].length - 1) {
+                            return getCourseCard(
+                              index,
+                              isLast: true,
+                            );
+                          } else if (index == 0) {
+                            return getCourseCard(
+                              index,
+                              isFirst: true,
+                            );
+                          }
+                          return getCourseCard(
+                            index,
+                          );
+                        },
+                      ),
+                      MyBannerAdWidget(),
+                    ],
+                  ),
+                  Positioned(
+                    child: MyBannerAdWidget(),
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                  )
+                ],
               );
       },
     );
@@ -101,29 +121,38 @@ class _CoursesPageState extends State<CoursesPage> {
                 children: [
                   isFirst
                       ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Select Semester:"),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: DropdownButton(
-                                value: api.dropdownValue,
-                                items: getSemesters(),
-                                onChanged: (value) {
-                                  api.dropdownValue = value;
-                                  setState(() {
-                                    loading = true;
-                                  });
-                                  api
-                                      .getAllCourses(ref: value!.toString())
-                                      .then((
-                                    value,
-                                  ) {
-                                    setState(() {
-                                      loading = false;
-                                    });
-                                  });
-                                },
+                            Text(
+                              "Select Semester:",
+                              style: TextStyle(
+                                color: Get.isDarkMode
+                                    ? Globals.onPrimary
+                                    : Globals.onLightBackground,
                               ),
+                            ),
+                            const SizedBox(width: 8),
+                            DropdownButton(
+                              style: TextStyle(
+                                color: Get.isDarkMode
+                                    ? Globals.onPrimary
+                                    : Globals.primary,
+                              ),
+                              value: api.dropdownValue,
+                              items: getSemesters(),
+                              onChanged: (value) {
+                                api.dropdownValue = value;
+                                setState(() {
+                                  loading = true;
+                                });
+                                api.getAllCourses(ref: value!.toString()).then((
+                                  value,
+                                ) {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                });
+                              },
                             )
                           ],
                         )
@@ -184,11 +213,7 @@ class _CoursesPageState extends State<CoursesPage> {
                               child: InkResponse(
                                 child: Icon(
                                   Icons.file_download_rounded,
-                                  color: Get.isDarkMode
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary
-                                      : Theme.of(context).colorScheme.onPrimary,
+                                  color: Globals.onPrimary,
                                 ),
                               ),
                             )

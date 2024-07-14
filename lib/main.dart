@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:ezamizone/globals.dart';
 import 'package:ezamizone/pages/attendance.dart';
 import 'package:ezamizone/pages/courses.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -14,6 +16,7 @@ void main() async {
   await GetStorage.init(
     "ezamizone",
   );
+  unawaited(MobileAds.instance.initialize());
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runApp(const MainApp());
@@ -49,10 +52,32 @@ class _MainAppState extends State<MainApp> {
       child: GetMaterialApp(
         themeMode: ThemeMode.dark,
         theme: ThemeData(
-          colorScheme: Globals.lightTheme,
+          scaffoldBackgroundColor: Globals.lightBackground,
+          colorScheme: ColorScheme(
+            brightness: Brightness.light,
+            primary: Globals.primary,
+            onPrimary: Globals.onPrimary,
+            secondary: Globals.primary,
+            onSecondary: Globals.onPrimary,
+            error: const Color(0xFFFFCDD2),
+            onError: const Color(0xFFB71C1C),
+            surface: Globals.lightBackground,
+            onSurface: Globals.onLightBackground,
+          ),
         ),
         darkTheme: ThemeData(
-          colorScheme: Globals.darkTheme,
+          scaffoldBackgroundColor: Globals.darkBackground,
+          colorScheme: ColorScheme(
+            brightness: Brightness.dark,
+            primary: Globals.primary,
+            onPrimary: Globals.onPrimary,
+            secondary: Globals.primary,
+            onSecondary: Globals.onPrimary,
+            error: const Color(0xFFFFCDD2),
+            onError: const Color(0xFFB71C1C),
+            surface: Globals.lightBackground,
+            onSurface: Globals.onLightBackground,
+          ),
         ),
         initialRoute: "/",
         routes: {
@@ -85,11 +110,16 @@ class _MainAppState extends State<MainApp> {
       } else {
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Globals.primary,
+            foregroundColor: Globals.onPrimary,
             title: Text(
               'Hello ${api.username}',
             ),
           ),
           drawer: Drawer(
+            backgroundColor: Get.isDarkMode
+                ? Globals.darkBackground
+                : Globals.lightBackground,
             child: Column(
               children: [
                 Container(
@@ -108,11 +138,21 @@ class _MainAppState extends State<MainApp> {
                   ),
                 ),
                 ListTile(
-                  title: Text("Toggle theme"),
+                  title: Text(
+                    "Toggle theme",
+                    style: TextStyle(
+                      color: Get.isDarkMode
+                          ? Globals.onPrimary
+                          : Globals.onLightBackground,
+                    ),
+                  ),
                   leading: Icon(
                     Get.isDarkMode
                         ? Icons.light_mode_rounded
                         : Icons.dark_mode_rounded,
+                    color: Get.isDarkMode
+                        ? Globals.onPrimary
+                        : Globals.onLightBackground,
                   ),
                   onTap: () {
                     Get.changeThemeMode(
@@ -121,21 +161,45 @@ class _MainAppState extends State<MainApp> {
                   },
                 ),
                 ListTile(
-                  title: const Text("Attendance"),
-                  leading: const Icon(Icons.calendar_today_rounded),
+                  title: Text(
+                    "Attendance",
+                    style: TextStyle(
+                      color: Get.isDarkMode
+                          ? Globals.onPrimary
+                          : Globals.onLightBackground,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.calendar_today_rounded,
+                    color: Get.isDarkMode
+                        ? Globals.onPrimary
+                        : Globals.onLightBackground,
+                  ),
                   onTap: () {
                     Get.toNamed("/attendance");
                   },
                 ),
                 ListTile(
-                  title: const Text("Courses"),
-                  leading: const Icon(Icons.menu_book_rounded),
+                  title: Text(
+                    "Courses",
+                    style: TextStyle(
+                      color: Get.isDarkMode
+                          ? Globals.onPrimary
+                          : Globals.onLightBackground,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.menu_book_rounded,
+                    color: Get.isDarkMode
+                        ? Globals.onPrimary
+                        : Globals.onLightBackground,
+                  ),
                   onTap: () => Get.toNamed("/courses"),
                 ),
               ],
             ),
           ),
-          body: SafeArea(child: child),
+          body: child,
         );
       }
     });

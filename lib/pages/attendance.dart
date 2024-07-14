@@ -1,8 +1,9 @@
+import 'package:ezamizone/banner_ad_widget.dart';
+import 'package:ezamizone/globals.dart';
 import 'package:ezamizone/providers/auth.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AttendancePage extends StatefulWidget {
@@ -32,19 +33,35 @@ class _AttendancePageState extends State<AttendancePage> {
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Scaffold(
-                  body: ListView.separated(
-                    itemCount: api.attendance['records'].length,
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 8.0);
-                    },
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return FlipCard(
-                        controller: flipCardController,
-                        front: _subjectInformation(index, api, context),
-                        back: _attendanceInformation(api, index),
-                      );
-                    },
+                  body: Stack(
+                    children: [
+                      ListView(
+                        children: [
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: api.attendance['records'].length,
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(height: 8.0);
+                            },
+                            itemBuilder: (context, index) {
+                              return FlipCard(
+                                controller: flipCardController,
+                                front: _subjectInformation(index, api, context),
+                                back: _attendanceInformation(api, index),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 50),
+                        ],
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: MyBannerAdWidget(),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -52,47 +69,65 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 
-  Container _attendanceInformation(ApiProvider api, int index) {
-    return Container(
-      width: double.infinity,
-      height: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        gradient: LinearGradient(
-          colors: [
-            api.getBgColor(
-              api.attendance["records"][index]["attendance"]["attended"],
-              api.attendance["records"][index]["attendance"]["held"],
-            ),
-            api
-                .getBgColor(
-                  api.attendance["records"][index]["attendance"]["attended"],
-                  api.attendance["records"][index]["attendance"]["held"],
-                )
-                .withOpacity(0.75),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          stops: const [0.3, 1],
-        ),
+  Widget _attendanceInformation(ApiProvider api, int index) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: () {
+          if (index == api.attendance['records'].length - 1) {
+            return 16.0;
+          } else {
+            return 0.0;
+          }
+        }(),
+        top: () {
+          if (index == 0) {
+            return 16.0;
+          } else {
+            return 0.0;
+          }
+        }(),
       ),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            maxRadius: 50,
-            child: Text(
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+      child: Container(
+        width: double.infinity,
+        height: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          gradient: LinearGradient(
+            colors: [
+              api.getBgColor(
+                api.attendance["records"][index]["attendance"]["attended"],
+                api.attendance["records"][index]["attendance"]["held"],
               ),
-              textAlign: TextAlign.center,
-              "${api.attendance["records"][index]["attendance"]["attended"]}/${api.attendance["records"][index]["attendance"]["held"]}\n${api.attendance["records"][index]["attendance"]["attended"] / api.attendance["records"][index]["attendance"]["held"] * 100}%",
-            ),
+              api
+                  .getBgColor(
+                    api.attendance["records"][index]["attendance"]["attended"],
+                    api.attendance["records"][index]["attendance"]["held"],
+                  )
+                  .withOpacity(0.75),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: const [0.3, 1],
           ),
-        ],
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              maxRadius: 50,
+              child: Text(
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                textAlign: TextAlign.center,
+                "${api.attendance["records"][index]["attendance"]["attended"]}/${api.attendance["records"][index]["attendance"]["held"]}\n${api.attendance["records"][index]["attendance"]["attended"] / api.attendance["records"][index]["attendance"]["held"] * 100}%",
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -101,7 +136,20 @@ class _AttendancePageState extends State<AttendancePage> {
       int index, ApiProvider api, BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: index == api.attendance["records"].length - 1 ? 16 : 0,
+        bottom: () {
+          if (index == api.attendance['records'].length - 1) {
+            return 16.0;
+          } else {
+            return 0.0;
+          }
+        }(),
+        top: () {
+          if (index == 0) {
+            return 16.0;
+          } else {
+            return 0.0;
+          }
+        }(),
       ),
       child: Container(
         width: double.infinity,
@@ -128,9 +176,7 @@ class _AttendancePageState extends State<AttendancePage> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
-                color: Get.isDarkMode
-                    ? Theme.of(context).colorScheme.onSurface
-                    : Theme.of(context).colorScheme.onPrimary,
+                color: Globals.onPrimary,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -138,9 +184,7 @@ class _AttendancePageState extends State<AttendancePage> {
               api.attendance["records"][index]['course']['name'],
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Get.isDarkMode
-                    ? Theme.of(context).colorScheme.onSurface
-                    : Theme.of(context).colorScheme.onPrimary,
+                color: Globals.onPrimary,
               ),
             ),
             const SizedBox(height: 16),
@@ -148,10 +192,8 @@ class _AttendancePageState extends State<AttendancePage> {
               "Tap to view attendance.",
               style: TextStyle(
                 fontSize: 14,
-                color: Get.isDarkMode
-                    ? Theme.of(context).colorScheme.onSurface
-                    : Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.w700,
+                color: Globals.onPrimary,
               ),
               textAlign: TextAlign.center,
             ),

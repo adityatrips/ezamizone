@@ -1,3 +1,5 @@
+import 'package:ezamizone/banner_ad_widget.dart';
+import 'package:ezamizone/globals.dart';
 import 'package:ezamizone/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -72,21 +74,58 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const Spacer(),
               TextField(
-                controller: usernameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Username"),
+                style: TextStyle(
+                  color: Get.isDarkMode ? Globals.onPrimary : Globals.primary,
                 ),
+                controller: usernameController,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Globals.onPrimary,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 2,
+                      color: Globals.onPrimary,
+                    ),
+                  ),
+                  label: Text(
+                    "Username",
+                    style: TextStyle(
+                      color:
+                          Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                    ),
+                  ),
+                ),
+                cursorColor:
+                    Get.isDarkMode ? Globals.onPrimary : Globals.primary,
               ),
               const SizedBox(height: 16),
               TextField(
+                style: TextStyle(
+                  color: Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                ),
                 controller: passwordController,
                 obscureText: isHidden,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Globals.onPrimary,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 2,
+                      color: Globals.onPrimary,
+                    ),
+                  ),
                   suffixIcon: GestureDetector(
                     child: Icon(
                       isHidden ? Icons.visibility : Icons.visibility_off,
+                      color:
+                          Get.isDarkMode ? Globals.onPrimary : Globals.primary,
                     ),
                     onTap: () {
                       setState(() {
@@ -94,7 +133,13 @@ class _LoginPageState extends State<LoginPage> {
                       });
                     },
                   ),
-                  label: const Text("Password"),
+                  label: Text(
+                    "Password",
+                    style: TextStyle(
+                      color:
+                          Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                    ),
+                  ),
                 ),
               ),
               GestureDetector(
@@ -107,8 +152,28 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text("Remember this account?"),
+                    Text(
+                      "Remember this account?",
+                      style: TextStyle(
+                        color: Get.isDarkMode
+                            ? Globals.onPrimary
+                            : Globals.primary,
+                      ),
+                    ),
                     Checkbox(
+                      checkColor:
+                          Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Get.isDarkMode
+                              ? Globals.onPrimary
+                              : Globals.primary,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      overlayColor: WidgetStatePropertyAll(
+                        Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                      ),
                       value: rememberMe,
                       onChanged: (value) {
                         setState(() {
@@ -169,14 +234,23 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   });
                 },
-                child: const Text("Login"),
+                child: Text(
+                  "Login",
+                  style: TextStyle(
+                    color: Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                  ),
+                ),
               ),
               const Spacer(),
-              const Text(
+              Text(
                 "Made with ❤️ by Aditya Tripathi",
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Get.isDarkMode ? Globals.onPrimary : Globals.primary,
+                ),
               ),
               const SizedBox(height: 20),
+              MyBannerAdWidget(),
             ],
           ),
         );
