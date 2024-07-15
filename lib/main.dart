@@ -50,7 +50,7 @@ class _MainAppState extends State<MainApp> {
         ChangeNotifierProvider(create: (context) => ApiProvider()),
       ],
       child: GetMaterialApp(
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.system,
         theme: ThemeData(
           scaffoldBackgroundColor: Globals.lightBackground,
           colorScheme: ColorScheme(
@@ -176,7 +176,12 @@ class _MainAppState extends State<MainApp> {
                         : Globals.onLightBackground,
                   ),
                   onTap: () {
-                    Get.offAndToNamed("/attendance");
+                    Get.offNamedUntil("/attendance", (route) {
+                      if (route.settings.name == "/attendance") {
+                        return true;
+                      }
+                      return false;
+                    });
                   },
                 ),
                 ListTile(
@@ -194,12 +199,17 @@ class _MainAppState extends State<MainApp> {
                         ? Globals.onPrimary
                         : Globals.onLightBackground,
                   ),
-                  onTap: () => Get.offAndToNamed("/courses"),
+                  onTap: () => Get.offNamedUntil("/courses", (route) {
+                    if (route.settings.name == "/attendance") {
+                      return true;
+                    }
+                    return false;
+                  }),
                 ),
               ],
             ),
           ),
-          body: child,
+          body: SafeArea(child: child),
         );
       }
     });

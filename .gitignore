@@ -46,3 +46,4 @@ macos/
 
 /**/*.keystore
 android/key.peoperties
+android/app/google-services.json

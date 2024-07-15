@@ -40,7 +40,12 @@ class _LoginPageState extends State<LoginPage> {
             storage.write("username", usernameController.text);
             storage.write("password", passwordController.text);
           }
-          Get.offAndToNamed("/attendance");
+          Get.offNamedUntil("/attendance", (route) {
+            if (route.settings.name == "/attendance") {
+              return true;
+            }
+            return false;
+          });
         } else {
           Get.snackbar(
             "Invalid Credentials",
@@ -214,7 +219,12 @@ class _LoginPageState extends State<LoginPage> {
                       usernameController.clear();
                       passwordController.clear();
 
-                      Get.offAndToNamed("/attendance");
+                      Get.offNamedUntil("/attendance", (route) {
+                        if (route.settings.name == "/attendance") {
+                          return true;
+                        }
+                        return false;
+                      });
                     } else {
                       Get.snackbar(
                         "Invalid Credentials",
