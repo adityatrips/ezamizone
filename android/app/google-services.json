@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1054784523235",
+    "project_id": "amity-ezamizone",
+    "storage_bucket": "amity-ezamizone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054784523235:android:50050fc4ae8b3585012ed6",
+        "android_client_info": {
+          "package_name": "com.adityatripathi.ezamizone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnOBfMLudaY_m9elL-L8JlpR6QywnrpLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

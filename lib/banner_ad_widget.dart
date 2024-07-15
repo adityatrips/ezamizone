@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ezamizone/globals.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -10,7 +8,7 @@ class MyBannerAdWidget extends StatefulWidget {
 
   final String adUnitId = "ca-app-pub-5931956401636205/4300680692";
 
-  MyBannerAdWidget({
+  const MyBannerAdWidget({
     super.key,
     this.adSize = AdSize.banner,
   });

@@ -1,4 +1,4 @@
-package com.example.ezamizone
+package com.adityatripathi.ezamizone
 
 import io.flutter.embedding.android.FlutterActivity
 
