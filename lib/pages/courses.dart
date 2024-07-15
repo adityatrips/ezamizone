@@ -67,14 +67,14 @@ class _CoursesPageState extends State<CoursesPage> {
                           );
                         },
                       ),
-                      MyBannerAdWidget(),
+                      const MyBannerAdWidget(),
                     ],
                   ),
-                  Positioned(
-                    child: MyBannerAdWidget(),
+                  const Positioned(
                     bottom: 0,
                     left: 0,
                     right: 0,
+                    child: MyBannerAdWidget(),
                   )
                 ],
               );

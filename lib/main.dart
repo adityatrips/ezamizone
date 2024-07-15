@@ -176,7 +176,7 @@ class _MainAppState extends State<MainApp> {
                         : Globals.onLightBackground,
                   ),
                   onTap: () {
-                    Get.toNamed("/attendance");
+                    Get.offAndToNamed("/attendance");
                   },
                 ),
                 ListTile(
@@ -194,7 +194,7 @@ class _MainAppState extends State<MainApp> {
                         ? Globals.onPrimary
                         : Globals.onLightBackground,
                   ),
-                  onTap: () => Get.toNamed("/courses"),
+                  onTap: () => Get.offAndToNamed("/courses"),
                 ),
               ],
             ),

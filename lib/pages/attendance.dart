@@ -55,7 +55,7 @@ class _AttendancePageState extends State<AttendancePage> {
                           const SizedBox(height: 50),
                         ],
                       ),
-                      Positioned(
+                      const Positioned(
                         bottom: 0,
                         left: 0,
                         right: 0,

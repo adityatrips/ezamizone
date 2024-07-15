@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
         storage.read("password"),
       )
           .then((value) {
-        print(value.toString());
         if (value) {
           usernameController.clear();
           passwordController.clear();
@@ -41,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
             storage.write("username", usernameController.text);
             storage.write("password", passwordController.text);
           }
-          Get.toNamed("/attendance");
+          Get.offAndToNamed("/attendance");
         } else {
           Get.snackbar(
             "Invalid Credentials",
@@ -203,8 +202,6 @@ class _LoginPageState extends State<LoginPage> {
                       "password",
                       passwordController.text,
                     );
-
-                    print("____SAVED____");
                   }
 
                   api
@@ -217,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                       usernameController.clear();
                       passwordController.clear();
 
-                      Get.toNamed("/attendance");
+                      Get.offAndToNamed("/attendance");
                     } else {
                       Get.snackbar(
                         "Invalid Credentials",
@@ -250,7 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              MyBannerAdWidget(),
+              const MyBannerAdWidget(),
             ],
           ),
         );
